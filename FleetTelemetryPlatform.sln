@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D778D261-698B-4A73-A5F7-223B2B0ECDE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Api", "src\Fleet.Api\Fleet.Api.csproj", "{D7246439-1DDB-4838-B933-B963D7CBBCC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Application", "src\Fleet.Application\Fleet.Application.csproj", "{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Domain", "src\Fleet.Domain\Fleet.Domain.csproj", "{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.Infrastructure", "src\Fleet.Infrastructure\Fleet.Infrastructure.csproj", "{492E4416-2CF9-447C-9B74-BBBAB28A123C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleet.TelemetryWorker", "src\Fleet.TelemetryWorker\Fleet.TelemetryWorker.csproj", "{108F2855-1A11-4D47-9BC9-4E2E3366BC49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7246439-1DDB-4838-B933-B963D7CBBCC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7246439-1DDB-4838-B933-B963D7CBBCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7246439-1DDB-4838-B933-B963D7CBBCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7246439-1DDB-4838-B933-B963D7CBBCC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492E4416-2CF9-447C-9B74-BBBAB28A123C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492E4416-2CF9-447C-9B74-BBBAB28A123C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492E4416-2CF9-447C-9B74-BBBAB28A123C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492E4416-2CF9-447C-9B74-BBBAB28A123C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{108F2855-1A11-4D47-9BC9-4E2E3366BC49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{108F2855-1A11-4D47-9BC9-4E2E3366BC49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{108F2855-1A11-4D47-9BC9-4E2E3366BC49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{108F2855-1A11-4D47-9BC9-4E2E3366BC49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D7246439-1DDB-4838-B933-B963D7CBBCC2} = {D778D261-698B-4A73-A5F7-223B2B0ECDE9}
+		{DCF333EE-65CA-4A0C-9892-AA6C6BC8BDAD} = {D778D261-698B-4A73-A5F7-223B2B0ECDE9}
+		{EE1DFBEB-8ABD-4A8D-8DEC-309D556593B5} = {D778D261-698B-4A73-A5F7-223B2B0ECDE9}
+		{492E4416-2CF9-447C-9B74-BBBAB28A123C} = {D778D261-698B-4A73-A5F7-223B2B0ECDE9}
+		{108F2855-1A11-4D47-9BC9-4E2E3366BC49} = {D778D261-698B-4A73-A5F7-223B2B0ECDE9}
+	EndGlobalSection
+EndGlobal
