@@ -1,3 +1,5 @@
+using Fleet.Application.Interfaces;
+using Fleet.Infrastructure.Messaging;
 using Fleet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,21 +8,29 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Fleet.Infrastructure;
 
 /// <summary>
-/// Métodos de extensión para registrar los servicios de infraestructura.
+/// Proporciona métodos de extensión para registrar los servicios
+/// relacionados con la infraestructura de la aplicación.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registra los servicios de persistencia de la plataforma.
+    /// Registra los servicios de infraestructura necesarios para la aplicación.
     /// </summary>
-    /// <param name="services">Colección de servicios de la aplicación.</param>
-    /// <param name="configuration">Configuración de la aplicación.</param>
-    /// <returns>La colección de servicios para continuar configurando DI.</returns>
+    /// <param name="services">
+    /// Colección de servicios utilizada por el contenedor de inyección de dependencias.
+    /// </param>
+    /// <param name="configuration">
+    /// Configuración de la aplicación.
+    /// </param>
+    /// <returns>
+    /// La colección de servicios con las dependencias de infraestructura registradas.
+    /// </returns>
     public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
+        IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("FleetDatabase");
+        var connectionString =
+            configuration.GetConnectionString("FleetDatabase");
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
@@ -30,6 +40,11 @@ public static class DependencyInjection
 
         services.AddDbContext<FleetDbContext>(options =>
             options.UseNpgsql(connectionString));
+
+        services.Configure<KafkaOptions>(
+            configuration.GetSection("Kafka"));
+
+        services.AddSingleton<IEventPublisher, KafkaEventPublisher>();
 
         return services;
     }

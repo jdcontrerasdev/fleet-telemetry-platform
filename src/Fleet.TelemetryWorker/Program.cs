@@ -3,7 +3,9 @@ using Fleet.TelemetryWorker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration);
+Fleet.Infrastructure.DependencyInjection.AddInfrastructure(
+    builder.Services,
+    builder.Configuration);
 
 builder.Services.AddHostedService<Worker>();
 
