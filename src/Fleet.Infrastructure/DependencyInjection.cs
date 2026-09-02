@@ -59,6 +59,9 @@ public static class DependencyInjection
         services.AddScoped<IProcessedTelemetryEventRepository,
             ProcessedTelemetryEventRepository>();
 
+        services.AddScoped<IVehicleRepository, VehicleRepository>();
+        services.AddScoped<VehicleQueryService>();
+
         return services;
     }
 }

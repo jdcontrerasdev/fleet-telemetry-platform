@@ -41,4 +41,19 @@ public sealed class TelemetryRepository : ITelemetryRepository
             telemetry,
             cancellationToken);        
     }
+
+    // <summary>
+    /// Obtiene los registros de telemetría asociados a un vehículo,
+    /// ordenados desde el registro más reciente hasta el más antiguo.
+    /// </summary>
+    public async Task<IReadOnlyCollection<Telemetry>> GetByVehicleIdAsync(
+        string vehicleId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Telemetries
+            .AsNoTracking()
+            .Where(telemetry => telemetry.VehicleId == vehicleId)
+            .OrderByDescending(telemetry => telemetry.Timestamp)
+            .ToListAsync(cancellationToken);
+    }
 }

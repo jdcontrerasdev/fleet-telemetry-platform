@@ -27,4 +27,13 @@ public interface ITelemetryRepository
     Task AddAsync(
         Telemetry telemetry,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Obtiene la colección de registros de telemetría asociados
+    /// </summary>
+    /// <param name="vehicleId">Identificador único del vehículo.</param>
+    /// <param name="cancellationToken">Token para cancelar la operación.</param>
+    Task<IReadOnlyCollection<Telemetry>> GetByVehicleIdAsync(
+    string vehicleId,
+    CancellationToken cancellationToken = default);
 }
