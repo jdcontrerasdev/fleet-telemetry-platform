@@ -1,8 +1,10 @@
 using Fleet.Infrastructure;
 using Fleet.Application.Services;
 using Fleet.Application.DTOs;
+using Fleet.Application.Interfaces;
 using Fleet.Infrastructure.Persistence;
 using Fleet.Infrastructure.Persistence.Seed;
+using Fleet.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,8 @@ Fleet.Infrastructure.DependencyInjection.AddInfrastructure(
 builder.Services.AddScoped<TelemetryService>();
 builder.Services.AddScoped<TelemetryQueryService>();
 builder.Services.AddScoped<VehicleStateQueryService>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<AlertQueryService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -107,6 +111,18 @@ app.MapGet(
         return state is null
             ? Results.NotFound()
             : Results.Ok(state);
+    });
+
+app.MapGet(
+    "/api/alerts",
+    async (
+        AlertQueryService alertQueryService,
+        CancellationToken cancellationToken) =>
+    {
+        var alerts = await alertQueryService.GetAllAsync(
+            cancellationToken);
+
+        return Results.Ok(alerts);
     });
 
 app.Run();
