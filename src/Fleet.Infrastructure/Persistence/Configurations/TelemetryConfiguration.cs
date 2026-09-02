@@ -17,23 +17,21 @@ public sealed class TelemetryConfiguration : IEntityTypeConfiguration<Telemetry>
     {
         builder.ToTable("telemetry");
 
-        builder.HasKey(telemetry => telemetry.EventId);
+        builder.HasKey(telemetry => new
+        {
+            telemetry.EventId,
+            telemetry.Timestamp
+        });
 
         builder.Property(telemetry => telemetry.VehicleId)
+            .HasColumnType("text")
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(telemetry => telemetry.Latitude)
-            .IsRequired();
-
-        builder.Property(telemetry => telemetry.Longitude)
-            .IsRequired();
-
-        builder.Property(telemetry => telemetry.Speed)
-            .IsRequired();
-
-        builder.Property(telemetry => telemetry.Timestamp)
-            .IsRequired();
+        builder.Property(telemetry => telemetry.Latitude).IsRequired();
+        builder.Property(telemetry => telemetry.Longitude).IsRequired();
+        builder.Property(telemetry => telemetry.Speed).IsRequired();
+        builder.Property(telemetry => telemetry.Timestamp).IsRequired();
 
         builder.HasIndex(telemetry => new
         {
