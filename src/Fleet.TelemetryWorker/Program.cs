@@ -1,4 +1,3 @@
-using Fleet.Infrastructure;
 using Fleet.TelemetryWorker;
 
 var builder = Host.CreateApplicationBuilder(args);

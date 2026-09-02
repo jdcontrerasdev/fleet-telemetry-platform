@@ -4,6 +4,8 @@ using Fleet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Fleet.Infrastructure.Repositories;
+using Fleet.Application.Services;
 
 namespace Fleet.Infrastructure;
 
@@ -44,7 +46,15 @@ public static class DependencyInjection
         services.Configure<KafkaOptions>(
             configuration.GetSection("Kafka"));
 
+        services.AddSingleton<KafkaTelemetryConsumer>();
         services.AddSingleton<IEventPublisher, KafkaEventPublisher>();
+        services.AddScoped<ITelemetryRepository, TelemetryRepository>();
+        services.AddScoped<IVehicleStateRepository, VehicleStateRepository>();
+        services.AddScoped<ITelemetryProcessor, TelemetryProcessor>();
+        
+        services.AddScoped<IUnitOfWork>(
+            serviceProvider =>
+                serviceProvider.GetRequiredService<FleetDbContext>());
 
         return services;
     }

@@ -2,6 +2,7 @@ using System.Text.Json;
 using Confluent.Kafka;
 using Fleet.Application.Interfaces;
 using Microsoft.Extensions.Options;
+using Fleet.Domain.Entities;
 
 namespace Fleet.Infrastructure.Messaging;
 
@@ -51,8 +52,37 @@ public sealed class KafkaEventPublisher : IEventPublisher
             _options.TelemetryTopic,
             new Message<string, string>
             {
+                Key = GetMessageKey(eventMessage),
                 Value = json
             },
             cancellationToken);
+            }
+
+    /// <summary>
+    /// Obtiene la clave utilizada para determinar la partición
+    /// del evento dentro de Kafka.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Tipo del evento publicado.
+    /// </typeparam>
+    /// <param name="eventMessage">
+    /// Evento del cual se obtiene la clave.
+    /// </param>
+    /// <returns>
+    /// Identificador del vehículo cuando el evento corresponde a telemetría.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Se produce cuando el evento no corresponde a un tipo soportado.
+    /// </exception>
+    private static string GetMessageKey<T>(T eventMessage)
+    {
+        if (eventMessage is Telemetry telemetry)
+        {
+            return telemetry.VehicleId;
+        }
+
+        throw new ArgumentException(
+            $"El tipo de evento '{typeof(T).Name}' no es soportado.",
+            nameof(eventMessage));
     }
 }
