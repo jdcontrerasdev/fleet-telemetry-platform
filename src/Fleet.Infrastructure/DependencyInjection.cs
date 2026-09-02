@@ -56,6 +56,9 @@ public static class DependencyInjection
             serviceProvider =>
                 serviceProvider.GetRequiredService<FleetDbContext>());
 
+        services.AddScoped<IProcessedTelemetryEventRepository,
+            ProcessedTelemetryEventRepository>();
+
         return services;
     }
 }

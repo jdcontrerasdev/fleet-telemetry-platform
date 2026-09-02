@@ -11,6 +11,7 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
 {
     private readonly ITelemetryRepository _telemetryRepository;
     private readonly IVehicleStateRepository _vehicleStateRepository;
+    private readonly IProcessedTelemetryEventRepository _processedEventRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
@@ -22,24 +23,31 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
     /// <param name="vehicleStateRepository">
     /// Repositorio utilizado para actualizar el estado actual del vehículo.
     /// </param>
+    /// <param name="processedEventRepository">
+    /// Repositorio utilizado para controlar la idempotencia
+    /// de los eventos procesados.
+    /// </param>
     /// <param name="unitOfWork">
-    /// Unidad de trabajo utilizada para confirmar los cambios de persistencia.
+    /// Unidad de trabajo utilizada para gestionar la transacción
+    /// y confirmar los cambios de persistencia.
     /// </param>
     public TelemetryProcessor(
         ITelemetryRepository telemetryRepository,
         IVehicleStateRepository vehicleStateRepository,
+        IProcessedTelemetryEventRepository processedEventRepository,
         IUnitOfWork unitOfWork)
     {
         _telemetryRepository = telemetryRepository;
         _vehicleStateRepository = vehicleStateRepository;
+        _processedEventRepository = processedEventRepository;
         _unitOfWork = unitOfWork;
     }
 
     /// <summary>
-    /// Procesa un evento de telemetría.
+    /// Procesa un evento de telemetría de forma transaccional e idempotente.
     /// </summary>
     /// <param name="telemetry">
-    /// Evento de telemetría recibido.
+    /// Evento de telemetría recibido desde Kafka.
     /// </param>
     /// <param name="cancellationToken">
     /// Token utilizado para cancelar la operación.
@@ -48,12 +56,17 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
         Telemetry telemetry,
         CancellationToken cancellationToken = default)
     {
-        var exists = await _telemetryRepository.ExistsAsync(
+        await using var transaction =
+            await _unitOfWork.BeginTransactionAsync(
+                cancellationToken);
+
+        var registered = await _processedEventRepository.TryRegisterAsync(
             telemetry.EventId,
             cancellationToken);
 
-        if (exists)
+        if (!registered)
         {
+            await transaction.RollbackAsync(cancellationToken);
             return;
         }
 
@@ -72,6 +85,10 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
             vehicleState,
             cancellationToken);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(
+            cancellationToken);
+
+        await transaction.CommitAsync(
+            cancellationToken);
     }
 }
