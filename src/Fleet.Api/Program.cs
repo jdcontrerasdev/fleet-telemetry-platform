@@ -1,10 +1,13 @@
 using Fleet.Infrastructure;
+using Fleet.Api.Realtime;
 using Fleet.Application.Services;
 using Fleet.Application.DTOs;
 using Fleet.Application.Interfaces;
 using Fleet.Infrastructure.Persistence;
 using Fleet.Infrastructure.Persistence.Seed;
 using Fleet.Infrastructure.Repositories;
+using Fleet.Infrastructure.Realtime;
+using Fleet.Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,14 @@ builder.Services.AddScoped<TelemetryQueryService>();
 builder.Services.AddScoped<VehicleStateQueryService>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<AlertQueryService>();
+builder.Services.AddSingleton<SseRealtimeNotifier>();
+
+builder.Services.AddSingleton<IRealtimeNotifier>(
+    sp => sp.GetRequiredService<SseRealtimeNotifier>());
+
+builder.Services.AddSingleton<KafkaRealtimeConsumer>();
+
+builder.Services.AddHostedService<KafkaRealtimeWorker>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -123,6 +134,27 @@ app.MapGet(
             cancellationToken);
 
         return Results.Ok(alerts);
+    });
+
+app.MapGet(
+    "/api/realtime",
+    async (
+        SseRealtimeNotifier notifier,
+        HttpResponse response,
+        CancellationToken cancellationToken) =>
+    {
+        response.ContentType = "text/event-stream";
+
+        await foreach (var vehicleId in notifier.ReadAllAsync(
+            cancellationToken))
+        {
+            await response.WriteAsync(
+                $"data: {vehicleId}\n\n",
+                cancellationToken);
+
+            await response.Body.FlushAsync(
+                cancellationToken);
+        }
     });
 
 app.Run();

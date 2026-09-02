@@ -30,7 +30,7 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
     /// <param name="unitOfWork">
     /// Unidad de trabajo utilizada para gestionar la transacción
     /// y confirmar los cambios de persistencia.
-    /// </param>
+    /// </param>   
     public TelemetryProcessor(
         ITelemetryRepository telemetryRepository,
         IVehicleStateRepository vehicleStateRepository,
@@ -40,7 +40,7 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
         _telemetryRepository = telemetryRepository;
         _vehicleStateRepository = vehicleStateRepository;
         _processedEventRepository = processedEventRepository;
-        _unitOfWork = unitOfWork;
+        _unitOfWork = unitOfWork;        
     }
 
     /// <summary>
@@ -89,6 +89,6 @@ public sealed class TelemetryProcessor : ITelemetryProcessor
             cancellationToken);
 
         await transaction.CommitAsync(
-            cancellationToken);
+            cancellationToken);        
     }
 }
