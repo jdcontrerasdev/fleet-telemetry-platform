@@ -10,18 +10,19 @@ public interface IVehicleStateRepository
     /// <summary>
     /// Obtiene el estado actual de un vehículo.
     /// </summary>
-    /// <param name="vehicleId">Identificador de negocio del vehículo.</param>
-    /// <param name="cancellationToken">Token para cancelar la operación.</param>
-    /// <returns>Estado actual o <c>null</c> si no existe.</returns>
     Task<VehicleState?> GetByVehicleIdAsync(
         string vehicleId,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Guarda o actualiza el estado actual de un vehículo.
+    /// Obtiene el estado actual de todos los vehículos.
     /// </summary>
-    /// <param name="vehicleState">Estado actual del vehículo.</param>
-    /// <param name="cancellationToken">Token para cancelar la operación.</param>
+    Task<IReadOnlyCollection<VehicleState>> GetAllAsync(
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Crea o actualiza el estado de un vehículo.
+    /// </summary>
     Task UpsertAsync(
         VehicleState vehicleState,
         CancellationToken cancellationToken = default);

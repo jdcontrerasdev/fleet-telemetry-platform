@@ -58,4 +58,15 @@ public sealed class VehicleStateRepository : IVehicleStateRepository
                 vehicleState.LastTelemetryAt);
         }        
     }
+
+    /// <summary>
+    /// Obtiene el estado actual de todos los vehículos.
+    /// </summary>
+    public async Task<IReadOnlyCollection<VehicleState>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.VehicleStates
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }

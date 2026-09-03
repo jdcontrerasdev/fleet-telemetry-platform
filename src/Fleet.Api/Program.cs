@@ -8,8 +8,11 @@ using Fleet.Infrastructure.Persistence.Seed;
 using Fleet.Infrastructure.Repositories;
 using Fleet.Infrastructure.Realtime;
 using Fleet.Infrastructure.Messaging;
+using Fleet.Infrastructure.AI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
 
 Fleet.Infrastructure.DependencyInjection.AddInfrastructure(
     builder.Services,
@@ -20,6 +23,7 @@ builder.Services.AddScoped<TelemetryQueryService>();
 builder.Services.AddScoped<VehicleStateQueryService>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<AlertQueryService>();
+builder.Services.AddScoped<VehicleOperationalQueryService>();
 builder.Services.AddSingleton<SseRealtimeNotifier>();
 
 builder.Services.AddSingleton<IRealtimeNotifier>(
@@ -31,6 +35,8 @@ builder.Services.AddHostedService<KafkaRealtimeWorker>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddFleetAI(builder.Configuration);
 
 var app = builder.Build();
 
@@ -48,6 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 app.UseHttpsRedirection();
 
 app.MapPost(
